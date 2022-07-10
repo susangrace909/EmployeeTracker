@@ -1,19 +1,17 @@
-// set up database, connections
+const express = require("express");
 
-//make table with departments, roles, employees
+const PORT = process.env.PORT || 3001;
+const app = express();
 
-// id auto-incremented and primary key for all (in schema, schema = tables)
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-// seeds INSERT INTO etc. examples
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+  res.status(404).end();
+});
 
-// index or server in root will have inquire info
-	// start with option of view all, add, or update
-	// no return, goes to another function after answer selected
-	// test with console log to make sure it’s working first, then replace with function
-// if answer = this, goes to new function
-	//make new function for each thing (view all departments, view all employees
-	//console log with function name to make sure it works
-
-// at the end include SELECT *
-
-Easiest was view all departments, need id and department
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
