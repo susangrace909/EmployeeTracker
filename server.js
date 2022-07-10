@@ -24,7 +24,11 @@ const db = mysql.createConnection(
 
 // GET all departments
 app.get("/api/departments", (req, res) => {
-  const sql = `SELECT * FROM departments`;
+  const sql = `SELECT roles.*, departments.name
+  AS department_name
+  FROM roles
+  LEFT JOIN departments
+  ON roles.department_id = departments.id`;
 
   db.query(sql, (err, rows) => {
     if (err) {
@@ -40,7 +44,12 @@ app.get("/api/departments", (req, res) => {
 
 // Get a single department
 app.get("/api/department/:id", (req, res) => {
-  const sql = `SELECT * FROM departments WHERE id = ?`;
+  const sql = `SELECT roles.*, roles.title
+  AS department_name
+  FROM roles
+  LEFT JOIN departments
+  ON roles.department_id = departments.id 
+  WHERE roles.id = ?`;
   const params = [req.params.id];
 
   db.query(sql, params, (err, row) => {
