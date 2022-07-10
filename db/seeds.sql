@@ -1,4 +1,4 @@
-/*parties */
+/*candidates */
 INSERT INTO departments (name)
 VALUES
 ('Customer Service'),
@@ -8,7 +8,7 @@ VALUES
 ('Meat'),
 ('Grocery');
 
-/*candidates*/
+/*roles*/
 INSERT INTO roles (title, salary, department_id)
 VALUES
 ('Bagger', 14.00, 1),
