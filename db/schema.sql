@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS departments;
 
@@ -14,4 +15,14 @@ CREATE TABLE roles (
     salary DECIMAL NOT NULL,
     department_id INTEGER,
     FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
+);
+
+/*voters*/
+CREATE TABLE employee (
+    id INTEGER AUTO_INCREMENT PRIMARY Key,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INTEGER NOT NULL,
+    manager_id INTEGER,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
 );
