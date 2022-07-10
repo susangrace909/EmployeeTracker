@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2");
+const inputCheck = require("./utils/inputCheck.js");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -21,36 +22,83 @@ const db = mysql.createConnection(
   console.log("Connected to the employees database.")
 );
 
-// GET a single department
-//db.query(`SELECT * FROM departments WHERE id = 1`, (err, row) => {
-//  if (err) {
-//    console.log(err);
-//  }
-//  console.log(row);
-//});
+// GET all departments
+app.get("/api/departments", (req, res) => {
+  const sql = `SELECT * FROM departments`;
 
-//db.query(`SELECT * FROM departments`, (err, rows) => {
-//  console.log(rows);
-//});
+  db.query(sql, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows,
+    });
+  });
+});
+
+// Get a single department
+app.get("/api/department/:id", (req, res) => {
+  const sql = `SELECT * FROM departments WHERE id = ?`;
+  const params = [req.params.id];
+
+  db.query(sql, params, (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: row,
+    });
+  });
+});
 
 // Delete a department
-//db.query(`DELETE FROM departments WHERE id = ?`, 1, (err, result) => {
-//  if (err) {
-//    console.log(err);
-//  }
-//  console.log(result);
-//});
+app.delete("/api/department/:id", (req, res) => {
+  const sql = `DELETE FROM departments WHERE id = ?`;
+  const params = [req.params.id];
+
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      res.statusMessage(400).json({ error: res.message });
+    } else if (!result.affectedRows) {
+      res.json({
+        message: "Deparment not found",
+      });
+    } else {
+      res.json({
+        message: "deleted",
+        changes: result.affectedRows,
+        id: req.params.id,
+      });
+    }
+  });
+});
 
 // Create a department
-//const sql = `INSERT INTO departments (id, name)
-//              VALUES (?,?)`;
-//const params = [1, 'Ronald', 'Firbank', 1];
-
-db.query(sql, params, (err, result) => {
-  if (err) {
-    console.log(err);
+app.post("/api/deparment", ({ body }, res) => {
+  const errors = inputCheck(body, "name");
+  if (errors) {
+    res.status(400).json({ error: errors });
+    return;
   }
-  console.log(result);
+
+  const sql = `INSERT INTO departments (name)
+    VALUES (?)`;
+  const params = [body.name];
+
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: body,
+    });
+  });
 });
 
 // Default response for any other request (Not Found)
