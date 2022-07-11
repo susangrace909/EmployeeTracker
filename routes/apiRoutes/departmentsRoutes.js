@@ -4,12 +4,8 @@ const db = require("../../db/connection");
 const inputCheck = require("../../utils/inputCheck");
 
 // GET all departments
-router.get("/api/departments", (req, res) => {
-  const sql = `SELECT roles.*, departments.name
-    AS department_name
-    FROM roles
-    LEFT JOIN departments
-    ON roles.department_id = departments.id`;
+router.get("/departments", (req, res) => {
+  const sql = `SELECT * FROM departments`;
 
   db.query(sql, (err, rows) => {
     if (err) {
@@ -24,13 +20,8 @@ router.get("/api/departments", (req, res) => {
 });
 
 // GET a single department
-router.get("/api/department/:id", (req, res) => {
-  const sql = `SELECT roles.*, roles.title
-    AS department_name
-    FROM roles
-    LEFT JOIN departments
-    ON roles.department_id = departments.id 
-    WHERE roles.id = ?`;
+router.get("/api/departments/:id", (req, res) => {
+  const sql = `SELECT * FROM roles WHERE id = ?`;
   const params = [req.params.id];
 
   db.query(sql, params, (err, row) => {
@@ -46,7 +37,7 @@ router.get("/api/department/:id", (req, res) => {
 });
 
 // Add a department
-router.post("/api/deparments", ({ body }, res) => {
+router.post("/departments", ({ body }, res) => {
   const errors = inputCheck(body, "name");
   if (errors) {
     res.status(400).json({ error: errors });
@@ -69,7 +60,7 @@ router.post("/api/deparments", ({ body }, res) => {
 });
 
 // Update a department's roles
-router.put("/api/departments/:id", (req, res) => {
+router.put("/departments/:id", (req, res) => {
   // Department is allowed to not have role affiliation
   const errors = inputCheck(req.body, "department_id");
   if (errors) {
@@ -80,6 +71,7 @@ router.put("/api/departments/:id", (req, res) => {
   const sql = `UPDATE departments SET department_id = ? 
                      WHERE id = ?`;
   const params = [req.body.department_id, req.params.id];
+
   db.query(sql, params, (err, result) => {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -99,9 +91,8 @@ router.put("/api/departments/:id", (req, res) => {
 });
 
 // Delete a department
-router.delete("/api/department/:id", (req, res) => {
+router.delete("/departments/:id", (req, res) => {
   const sql = `DELETE FROM departments WHERE id = ?`;
-  const params = [req.params.id];
 
   db.query(sql, params, (err, result) => {
     if (err) {
