@@ -19,6 +19,6 @@
   [GitHub](https://github.com/susangrace909/NoteTaker.git) <br />
   [Live Site](https://note-taker-susan-pero.herokuapp.com/)
 
-## Screenshot:
+## Video of FUnctionality:
 
-![Screenshot of website](NoteTaker.png)
+![Video of Functionality](NoteTaker.png)

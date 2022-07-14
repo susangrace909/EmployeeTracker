@@ -3,7 +3,7 @@ const inquirer = require("inquirer");
 const db = require("./db/connection");
 const cTable = require("console.table");
 
-///// QUESTIONS/////
+//!  QUESTIONS !//
 
 const questions = [
   //What would you like to do?
@@ -15,17 +15,15 @@ const questions = [
       "View all departments",
       "View individual department",
       "Add a department",
-      "Update a department",
       "Delete a department",
       "View all roles",
       "View individual role",
       "Add a role",
-      "Update a role",
       "Delete a role",
       "View all employees",
       "View individual employee",
+      "Update employee role",
       "Add an employee",
-      "Update an employee",
       "Delete an employee",
       "Exit",
     ],
@@ -238,10 +236,45 @@ const handleAnswer = (capturedResponse) => {
         );
       });
   }
-
-  //todo update department
-  //todo update role
-  //todo update employee role
+  //Update employee role
+  if (capturedResponse === "Update employee role") {
+    const listRolesQuery = `SELECT title FROM roles`;
+    db.query(listRolesQuery, (err, result) => {
+      if (err) throw err;
+      const list = result.map((role) => role.title);
+      inquirer
+        .prompt([
+          {
+            name: "updateRole",
+            message: "Which role would you like to update?",
+            type: "list",
+            choices: list,
+          },
+        ])
+        .then((response) => {
+          inquirer
+            .prompt([
+              {
+                name: "newRole",
+                message: "Type in new role title",
+                type: "input",
+              },
+            ])
+            .then((updatedRole) => {
+              const newRoleQuery = `UPDATE roles SET title = ? WHERE title = ?`;
+              db.query(
+                newRoleQuery,
+                [updatedRole.newRole, response.updateRole],
+                (err) => {
+                  if (err) throw err;
+                  console.log("Role updated!");
+                  init();
+                }
+              );
+            });
+        });
+    });
+  }
 
   //delete a department
   if (capturedResponse === "Delete a department") {
@@ -284,6 +317,8 @@ const handleAnswer = (capturedResponse) => {
         });
       });
   }
+
+  //Delete an employee
   if (capturedResponse === "Delete an employee") {
     inquirer
       .prompt([
@@ -308,9 +343,6 @@ const handleAnswer = (capturedResponse) => {
       });
   }
 };
-// IF "Update a department""Update a department"
-// IF "Update a role""Update a role"
-// IF "Update an employee""Update an employee"
 
 //Create a function to initialize app
 function init() {
