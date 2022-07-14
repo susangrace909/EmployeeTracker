@@ -16,9 +16,8 @@
 ## Repository Link
 
 - Repository can be found at: <br />
-  [GitHub](https://github.com/susangrace909/NoteTaker.git) <br />
-  [Live Site](https://note-taker-susan-pero.herokuapp.com/)
+  [GitHub](https://github.com/susangrace909/EmployeeTracker.git) <br />
 
 ## Video of FUnctionality:
 
-![Video of Functionality](NoteTaker.png)
+![Video of Functionality](Screencastify.webm)
